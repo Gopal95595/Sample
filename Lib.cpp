@@ -29,7 +29,7 @@ public:
     string subscribed_journal = obj.most_requested_journal;
     // Method to borrow items based on user type, update due dates, and maintain records.
     void borrowItem(const std::string &userName, string &userType, const std::string &itemTitle, bool isonLoan, bool iselectronic);
-    
+
     // Starting method
     void get();
 
@@ -145,7 +145,17 @@ void Library ::addItemsFromCSV(const std::string &csvFileName, string userName, 
             cout << "\n\n\t Enter the Publication name :: ";
             string pub;
             cin >> pub;
-            borrowItem(userName, userType, pub, false, true);
+            cout << "\n\n\t Do You Want to Borrow it : \n\n\t1.Borrow\n\n\t2.No Go TO HOME ";
+            int in;
+            cin >> in;
+            if (in == 1)
+            {
+                borrowItem(userName, userType, pub, false, false);
+            }
+            else
+            {
+                get();
+            }
         }
         if (k == 2)
         {
@@ -163,7 +173,17 @@ void Library ::addItemsFromCSV(const std::string &csvFileName, string userName, 
                 }
             }
             pub_name = publication[p];
-            borrowItem(userName, userType, pub_name, false, true);
+            cout << "\n\n\t Do You Want to Borrow it : \n\n\t1.Borrow\n\n\t2.No Go TO HOME ";
+            int in;
+            cin >> in;
+            if (in == 1)
+            {
+                borrowItem(userName, userType, pub_name, false, false);
+            }
+            else
+            {
+                get();
+            }
         }
     }
     if (csvFileName == "journals.csv")
@@ -244,7 +264,19 @@ void Library ::student()
     }
     else if (i == 3)
     {
-        cout << "Currently not Not Available please Comeback later";
+        int k;
+        // cout << "Currently not Not Available please Comeback later";
+        cout << "\n\n\t Do you Want Borrow it \n\n\t1.Yes \n\n\t2.No Go To Home";
+        cout << "\n\n\tEnter your choice : :  ";
+        cin >> k;
+        if (k == 1)
+        {
+            borrowItem(userName, userType, "News_Paper", false, true);
+        }
+        else
+        {
+            get();
+        }
     }
     else if (i == 4)
     {
@@ -309,7 +341,7 @@ void Library ::faculty()
         faculty();
     }
     cout << "\n\t\t>>Please Choose the item which you want to view from below :\n";
-    cout << "\n\t\t1.Books\n\n\t\t2.magazines\n\n\t\t3.News Paper\n\n\t\t4.Journals\n\n\t\t5.Close Application\n";
+    cout << "\n\t\t1.Books\n\n\t\t2.magazines\n\n\t\t3.News Paper\n\n\t\t4.Journals\n\n\t\t5.Subscribed Journal\n\n\t\t6.Close Application\n";
     cout << "\n\t\tEnter your choice : ";
     cin >> i;
     if (i == 1)
@@ -322,13 +354,40 @@ void Library ::faculty()
     }
     else if (i == 3)
     {
-        cout << "Currently not Not Available please Comeback later";
+        int k;
+        cout << "\n\n\t Do you Want Borrow it \n\n\t1.Yes \n\n\t2.No Go To Home";
+        cout << "\n\n\tEnter your choice : :  ";
+        cin >> k;
+        if (k == 1)
+        {
+            borrowItem(userName, userType, "News_Paper", false, true);
+        }
+        else
+        {
+            get();
+        }
     }
     else if (i == 4)
     {
         addItemsFromCSV("journals.csv", userName, userType);
     }
     else if (i == 5)
+    {
+        int k;
+        cout << "\n\n\tThe Library Subscribed Journal is :: " << subscribed_journal;
+        cout << "\n\n\t Do you Want Borrow it \n\n\t1.Yes \n\n\t2.No Go To Home";
+        cout << "\n\n\tEnter your choice : :  ";
+        cin >> k;
+        if (k == 1)
+        {
+            borrowItem(userName, userType, subscribed_journal, false, true);
+        }
+        else
+        {
+            get();
+        }
+    }
+    else if (i == 6)
     {
         exit(0);
     }
@@ -501,7 +560,7 @@ void Library ::purchaseItem(const std::string &userName, string &userType, const
 void Library ::borrowonLoan(const std::string &userName, string &userType)
 {
     string book_title;
-    int j;
+    int j = 0;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     cout << "\n\n\t Enter the Book Title you are looking for :: ";
     std::getline(std::cin, book_title);
@@ -524,7 +583,10 @@ void Library ::borrowonLoan(const std::string &userName, string &userType)
             }
         }
     }
-    cout << "Sorry Book Not Found :(";
+    if (j == 0) // if book is not found in nearby libraries
+    {
+        cout << "Sorry Book Not Found :(";
+    }
 }
 void Library ::fetchBookDetails(string userName, string userType, string *book_idcolumn, string *isbn_column, string *book_title, string *authors_column)
 {
